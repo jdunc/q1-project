@@ -11,9 +11,11 @@ Idea One
    https://www.govtrack.us/
    
 Idea Two
+
   I'll use volunteermatch.com as well as people's likes on facebook to try and search for a nearby volunteer opportunity 
   based on peoples Facebook likes (I have existing Facebook api prvileges that allow querying likes and have just applied for volunteermatch's
   api key)
   
 Idea Three
+
   I want to revisit the idea of using alchemy api to analyze text for its emotional content.  I want to analyze news documents and plot them on a map.  I did this before, but it has since broke.  And I want it to function for any location.  Eventually I want people to be able to sort by topic and emotional values.
