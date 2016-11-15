@@ -72,22 +72,48 @@ body {
   background-color: white;
   box-shadow: 2px 2px black;
 }
-
 .emotions {
-  background-color: blue;
+  /*background-color: blue;*/
   min-height:200px;
   border-radius:25px;
-
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: space-around;
+}
+.emotions > div{
+  width:20%;
+  height:200px;
+  /*background-color: purple;*/
+  border: 1px solid black;
+  float:left;
+  border-radius: 15px;
+  text-align: center;
+  vertical-align: center;
 }
 .map-list{
-  background-color: yellow;
   min-height:200px;
   border-radius:25px;
-
+}
+.map-list > div {
+  width:50%;
+  height:200px;
+  border: 1px solid black;
+  float:left;
+  border-radius: 15px;
+  text-align: center;
 }
 .results{
-  background-color: red;
-  min-height:200px;
+  /*background-color: red;*/
+  min-height:1000px;
   border-radius:25px;
-
+  float:left;
+}
+#map {
+  height: 1000px;
+}
+.article{
+}
+.articleImage{
 }
