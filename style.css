@@ -20,6 +20,8 @@ body {
 .search{
   min-height:150px;
   padding: 25px;
+  margin-top: auto;
+  margin-bottom: auto;
   border-radius: 25px;
   box-shadow:1px 1px gray;
   border: 1px solid black;
