@@ -46,7 +46,6 @@ $(document).ready(function(){
   //     locations: [ [lat, long] ] ,
   //   }
   // ]
-var articles = []; //articles will be added as objects to this array
 
   //call to bing for trending topics
   $.ajax({
@@ -91,46 +90,52 @@ var articles = []; //articles will be added as objects to this array
 
 //add the results to the page in a simple bootstrap div pattern
 function appendResults(results){
+  var articles = []; //articles will be added as objects to this array
   for (var i = 0; i < results.value.length; i++) {
     var url = results.value[i].url;
-    $('.results').append(`
-      <div class="row">
-      <div class="article col-sm-8">
-      <h1><a href="${results.value[i].url}">${results.value[i].name}</a></h1>
-      <p>${results.value[i].description}</p>
-      </div>
-      <div class="articleImage col-sm-4" >
-      </div>
-      </div>
-      `);
+    // $('.results').append(`
+    //   <div class="row">
+    //   <div class="article col-sm-8">
+    //   <h1><a href="${results.value[i].url}">${results.value[i].name}</a></h1>
+    //   <p>${results.value[i].description}</p>
+    //   </div>
+    //   <div class="articleImage col-sm-4" >
+    //   </div>
+    //   </div>
+    //   `);
+    var tempURL = results.value[i].url;
+    var tempName = results.value[i].name;
+    var tempDescription = results.value[i].description;
+    var $rgbV;
 
-      //the first ajax call here identifies and stores the URL of the article, the url given by bing is a redirect
-      $.ajax({
-        type: "GET",
-        url: `http://galvanize-cors-proxy.herokuapp.com/${url}`,
-        success: function(data, status, xhr) {
-          var location = xhr.getResponseHeader('Location');
-          console.log(xhr.getResponseHeader('X-Final-Url'));
-          var alchemyURL = xhr.getResponseHeader('X-Final-Url');
+    //the first ajax call here identifies and stores the URL of the article, the url given by bing is a redirect
+    $.ajax({
+      type: "GET",
+      url: `http://galvanize-cors-proxy.herokuapp.com/${url}`,
+      success: function(data, status, xhr) {
+        var location = xhr.getResponseHeader('Location');
+        console.log(xhr.getResponseHeader('X-Final-Url'));
+        var alchemyURL = xhr.getResponseHeader('X-Final-Url');
 
-          //this next ajax call sends the url of the article to alchemy api where it is analyzed for locations and for emotional values
-          $.ajax({
-            url: `https://watson-api-explorer.mybluemix.net/alchemy-api/calls/url/URLGetCombinedData?apikey=c1a9930232197e836a43483c82066f757e11235a&url=${alchemyURL}&outputMode=json&extract=doc-emotion,entities`,
-            dataType: 'json',
-            type: "POST",
-            success: function(data2) {
-              console.log('alchemy',data2);
-              var joy = parseFloat(data2['docEmotions']['joy']);
-              var sadness = parseFloat(data2['docEmotions']['sadness']);
-              var anger = parseFloat(data2['docEmotions']['anger']);
-              var disgust = parseFloat(data2['docEmotions']['disgust']);
-              var fear = parseFloat(data2['docEmotions']['fear']);
-              console.log(joy, sadness, anger, disgust, fear);
-              //this loop checks all of the identified entities to see if they are a location,  if it's a location, identify location coordinates
-              var locations = []; //store all the coordinates identified within an article here!
-              for (var i = 0; i < data2['entities'].length; i++) {
-                if(data2['entities'][i].disambiguated !== undefined){
-                  if(data2['entities'][i].disambiguated.geo !== undefined){
+        //this next ajax call sends the url of the article to alchemy api where it is analyzed for locations and for emotional values
+        $.ajax({
+          url: `https://watson-api-explorer.mybluemix.net/alchemy-api/calls/url/URLGetCombinedData?apikey=c1a9930232197e836a43483c82066f757e11235a&url=${alchemyURL}&outputMode=json&extract=doc-emotion,entities`,
+          dataType: 'json',
+          type: "POST",
+          success: function(data2) {
+            var article = {};
+            console.log('alchemy',data2);
+            var joy = parseFloat(data2['docEmotions']['joy']);
+            var sadness = parseFloat(data2['docEmotions']['sadness']);
+            var anger = parseFloat(data2['docEmotions']['anger']);
+            var disgust = parseFloat(data2['docEmotions']['disgust']);
+            var fear = parseFloat(data2['docEmotions']['fear']);
+            console.log(joy, sadness, anger, disgust, fear);
+            //this loop checks all of the identified entities to see if they are a location,  if it's a location, identify location coordinates
+            var locations = []; //store all the coordinates identified within an article here!
+            for (var i = 0; i < data2['entities'].length; i++) {
+              if(data2['entities'][i].disambiguated !== undefined){
+                if(data2['entities'][i].disambiguated.geo !== undefined){
                   console.log('location is' , data2['entities'][i].disambiguated.geo);
                   var coordinates = data2['entities'][i].disambiguated.geo.split(' ');
                   coordinates.join(',');
@@ -141,46 +146,61 @@ function appendResults(results){
 
             //now going to create the color of the emotion based on Plutchik's emotional color wheel
             var total = joy + sadness + fear + disgust + anger;
-      var joyP = joy / total ;
-      var sadP = sadness / total;
-      var fearP = fear / total;
-      var disP = disgust / total;
-      var angP = anger / total;
-      var redV = (joyP + angP) * 255;
-      var greenV = (joyP + fearP + angP) * 255;
-      var blueV = (sadP + disP) * 255;
-      if (sadness >= joy && sadness >= fear && sadness >= disgust && sadness >= anger){
-        var tempRed = parseInt(255*angP + 255*joyP + 128*disP);
-        var tempGreen = parseInt(255*joyP + 255*fearP);
-        var tempBlue = parseInt(255 - 255*sadP);
-        var $rgbV = "rgb(" + tempBlue + "," + tempBlue + "," + 255 + ")";
-      }
-    else if (joy >= sadness && joy >= fear && joy >= disgust && joy >= anger){
-        var tempRed = parseInt(255 - 255*joyP);
-        var tempGreen = parseInt(255*joyP);
-        var tempBlue = parseInt(255*sadP + 255*disP);
-        var $rgbV = "rgb(" + 255 + "," + 255 + "," + tempRed + ")";
-      }
-      else if (fear >= sadness && fear >= joy && fear >= disgust && fear >= anger){
-        var tempRed = parseInt(255 - 255*fearP);
-        var $rgbV = "rgb(" + tempRed + "," + 255 + "," + tempRed + ")";
-      }
-      else if (disgust >= sadness && disgust >= joy && disgust >= fear && disgust >= anger){
-        var tempRed = parseInt(128 - 128*disP + 128);
-        var tempGreen = parseInt(255*joyP + 255*fearP);
-        var tempBlue = parseInt(255 - 255*disP);
-        var $rgbV = "rgb(" + tempRed + "," + tempBlue + "," + 255 + ")";
-      }
-      else if (anger >= sadness && anger >= joy && anger >= fear && anger >= disgust){
-        var tempGreen = parseInt(255 - 255*angP);
-        var $rgbV = "rgb(" + 255 + "," + tempGreen + "," + tempGreen + ")";
-      }
-      else{var $rgbV = "rgb(" + Math.round(redV) + "," + Math.round(greenV) + "," + Math.round(blueV) + ")";}
-
+            var joyP = joy / total ;
+            var sadP = sadness / total;
+            var fearP = fear / total;
+            var disP = disgust / total;
+            var angP = anger / total;
+            var redV = (joyP + angP) * 255;
+            var greenV = (joyP + fearP + angP) * 255;
+            var blueV = (sadP + disP) * 255;
+            if (sadness >= joy && sadness >= fear && sadness >= disgust && sadness >= anger){
+              var tempRed = parseInt(255*angP + 255*joyP + 128*disP);
+              var tempGreen = parseInt(255*joyP + 255*fearP);
+              var tempBlue = parseInt(255 - 255*sadP);
+              var $rgbV = "rgb(" + tempBlue + "," + tempBlue + "," + 255 + ")";
+            }
+            else if (joy >= sadness && joy >= fear && joy >= disgust && joy >= anger){
+              var tempRed = parseInt(255 - 255*joyP);
+              var tempGreen = parseInt(255*joyP);
+              var tempBlue = parseInt(255*sadP + 255*disP);
+              var $rgbV = "rgb(" + 255 + "," + 255 + "," + tempRed + ")";
+            }
+            else if (fear >= sadness && fear >= joy && fear >= disgust && fear >= anger){
+              var tempRed = parseInt(255 - 255*fearP);
+              var $rgbV = "rgb(" + tempRed + "," + 255 + "," + tempRed + ")";
+            }
+            else if (disgust >= sadness && disgust >= joy && disgust >= fear && disgust >= anger){
+              var tempRed = parseInt(128 - 128*disP + 128);
+              var tempGreen = parseInt(255*joyP + 255*fearP);
+              var tempBlue = parseInt(255 - 255*disP);
+              var $rgbV = "rgb(" + tempRed + "," + tempBlue + "," + 255 + ")";
+            }
+            else if (anger >= sadness && anger >= joy && anger >= fear && anger >= disgust){
+              var tempGreen = parseInt(255 - 255*angP);
+              $rgbV = "rgb(" + 255 + "," + tempGreen + "," + tempGreen + ")";
+            }
+            else{var $rgbV = "rgb(" + Math.round(redV) + "," + Math.round(greenV) + "," + Math.round(blueV) + ")";}
+            article.title = tempName;
+            article.description = tempDescription;
+            article.link = tempURL;
+            article.emotion = [joy, sadness, anger, disgust, fear];
+            article.color = $rgbV;
+            article.locations = locations;
+            articles.push(article);
             console.log($rgbV);
             console.log('locations array', locations);
-            
-          }, //end of success function for alchemy call
+            $('.results').append(`
+              <div class="row">
+              <div class="article col-sm-8" style="background-color: ${article.color}">
+              <h1><a href="${article.link}" class='noColor'>${article.title}</a></h1>
+              <p>${article.description}</p>
+              </div>
+              <div class="articleImage col-sm-4" >
+              </div>
+              </div>
+              `);
+            }, //end of success function for alchemy call
             error: function(xhr) {
               console.log('error',xhr);
             }
@@ -188,5 +208,7 @@ function appendResults(results){
         } //end of getting redirected url function
       }); //end of ajax function to get new url
       // <img src="${results.value[i].image.thumbnail.contentUrl}" />
-    }  //
+    }
+    console.log('articles array of objects', articles);
+    //here I'll append the results to the results div
   }
