@@ -45,10 +45,21 @@ $(document).ready(function(){
     dataType: 'json',
     type: "GET",
     success: function(response) {
+      addButtons(response['value']);
+      console.log(response);
     },
     error: function(xhr) {
     }
   }); //end of ajax call for trending topics
+
+function addButtons(articles){
+  for (var i = 0; i < 20; i++) {
+    var headline = articles[i].name;
+    $('.topicsList').append(`
+      <li><a href="${articles[i].webSearchUrl}"><button>${headline}</button></a></li>
+      `);
+  }
+}
 
   $('.searchSubmit').click( //on clicking the search button, exectute this function
     function(){
@@ -194,7 +205,7 @@ function addColors(articles){
 function showList(articles){
   $(articles).each(function(index){
     $('.results').append(`
-      <div class="row">
+      <div class="row newsArticles">
       <div class="article col-sm-8" style="background-color: ${this.color}">
       <h1><a href="${this.link}" class='noColor'>${this.title}</a></h1>
       <p>${this.description}</p>

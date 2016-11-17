@@ -122,3 +122,6 @@ body {
 .noColor{
   color:black;
 }
+.newsArticles {
+  border-radius: 25px;
+}
