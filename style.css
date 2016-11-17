@@ -19,12 +19,12 @@ body {
 }
 .search{
   min-height:150px;
-  padding: 25px;
+  padding: 85px;
   margin-top: auto;
   margin-bottom: auto;
   border-radius: 25px;
-  box-shadow:1px 1px gray;
-  border: 1px solid black;
+  /*box-shadow:1px 1px gray;*/
+  /*border: 1px solid black;*/
 }
 .searchText{
   width:100%;
@@ -42,8 +42,8 @@ body {
   padding-top:10px;
   padding-bottom:10px;
   border-radius: 25px;
-  box-shadow:1px 1px gray;
-  border: 1px solid black;
+  /*box-shadow:1px 1px gray;*/
+  /*border: 1px solid black;*/
 }
 .topicsList{
   /*width:100%;
@@ -59,9 +59,10 @@ body {
   display: inline;
   margin:5px;
 }
-.topicsList li > button{
+.topicsList li > a > button{
   width: auto;
   height:auto;
+  color: white;
   min-width: 150px;
   min-height:30px;
   background-color: green;
@@ -70,8 +71,8 @@ body {
 
   /*margin:5px;*/
 }
-.topicsList li > button:hover {
-  background-color: white;
+.topicsList li > a > button:hover {
+  background-color: black;
   box-shadow: 2px 2px black;
 }
 .emotions {
@@ -88,7 +89,7 @@ body {
   width:20%;
   height:200px;
   /*background-color: purple;*/
-  border: 1px solid black;
+  /*border: 1px solid black;*/
   float:left;
   border-radius: 15px;
   text-align: center;
@@ -99,23 +100,45 @@ body {
   border-radius:25px;
 }
 .map-list > div {
-  width:50%;
-  height:200px;
-  border: 1px solid black;
+  width:25%;
+  font-size: xx-large;
+  background-color: gray;
+  /*border: 1px solid black;*/
   float:left;
   border-radius: 15px;
   text-align: center;
+  padding: 75px;
+  margin-bottom: 25px;
+}
+.map-list>div:nth-of-type(1){
+  margin-left:25%;
+}
+.map-list>div:nth-of-type(2){
+  margin-left:5%;
+}
+.map-list > div:hover {
+  opacity: 0.75;
+  box-shadow:5px 5px black;
+
 }
 .results{
   /*background-color: red;*/
   min-height:1000px;
   border-radius:25px;
   float:left;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: space-around;
 }
 #map {
   height: 1000px;
+  width:90%;
+  margin: auto;
 }
 .article{
+  width:100%;
 }
 .articleImage{
 }
