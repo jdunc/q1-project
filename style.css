@@ -1,6 +1,48 @@
 body {
   /*padding-top: 175px;*/
 }
+.navbar{
+  background-image: url("./emap.png");
+  background-size:300px;
+  /*background-repeat: no-repeat;*/
+  background-color: white;
+  box-shadow: 0px 0px;
+  border: 0px 0px ;
+}
+.e1{
+  color: yellow;
+  text-shadow: 2px 2px black;
+  background-color:yellow;
+}
+.e2{
+  color: red;
+  text-shadow: 2px 2px black;
+  background-color:red;
+
+
+}
+.e3{
+  color: green;
+  text-shadow: 2px 2px black;
+  background-color:green;
+
+
+}
+.e4{
+  color: purple;
+  text-shadow: 2px 2px black;
+  background-color:purple;
+
+
+}
+.e5{
+  color: blue;
+  text-shadow: 2px 2px black;
+  background-color:blue;
+
+
+}
+
 .starter-template {
   padding: 40px 15px;
   text-align: center;
@@ -77,7 +119,7 @@ body {
 }
 .emotions {
   /*background-color: blue;*/
-  min-height:200px;
+  min-height:150px;
   border-radius:25px;
   display: flex;
   flex-wrap: wrap;
@@ -86,8 +128,8 @@ body {
   align-items: space-around;
 }
 .emotions > div{
-  width:20%;
-  height:200px;
+  width:15%;
+  height:125px;
   /*background-color: purple;*/
   /*border: 1px solid black;*/
   float:left;

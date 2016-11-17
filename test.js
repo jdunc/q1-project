@@ -231,3 +231,32 @@ console.log('made an infowindow var');
         var tempTemp = tempCoords.split(",");
         var rand1 = parseFloat(Math.random() * .1 - .05);
         var rand…
+
+
+        for(i=0; i< markerArray.length; i++){
+            console.log('looping through markerArray');
+          var position = new google.maps.LatLng(markerArray[i][2], markerArray[i][3]);
+          console.log('adding a marker at: ' + markerArray[i][2] + 'and' + markerArray[i][3]);
+          bounds.extend(position);
+          marker = new google.maps.Marker({
+            position: position,
+            map: map,
+            title: markerArray[i][0],
+            icon: {
+              path: 'M-1,0a1,1 0 1,0 2,0a1,1 0 1,0 -2,0',
+              scale: 10,
+              fillColor: markerArray[i][4],
+              fillOpacity: 100,
+              strokeOpacity: 0,
+              scale: 10,
+            },
+          });
+
+          // "Allow each marker to have an info window"
+          google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+              infoWindow.setContent(markerArray[i][1]);
+              infoWindow.open(map, marker);
+            }
+          })(marker, i));
+        }
